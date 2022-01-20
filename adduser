@@ -3,7 +3,6 @@ import sys, os, getpass, crypt
 
 
 username = sys.argv[1]
-passwdline = "{}:x:1000:1000::/home/{}:/bin/bash\n".format(username, username)
 
 password = getpass.getpass('Password: ')
 passwordhash = crypt.crypt(password)
