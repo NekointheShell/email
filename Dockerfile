@@ -1,5 +1,6 @@
 FROM debian
 ARG domain example.com
+ARG sendgrid fail
 
 
 ENV DEBIAN_FRONTEND noninteractive
@@ -14,6 +15,7 @@ ADD users /users/
 
 RUN sed -i "s/CHANGEME_DOMAIN/$domain/" /etc/postfix/main.cf
 RUN sed -i "s/CHANGEME_DOMAIN/$domain/" /etc/postfix/master.cf
+RUN sed -i "s/CHANGEME_SENDGRID/$sendgrid/" /etc/postfix/sasl_passwd
 RUN postmap /etc/postfix/sasl_passwd
 
 RUN while read user; do useradd -m $user; sed -i "s/$user//" /etc/shadow; done < users/list
