@@ -1,0 +1,49 @@
+myhostname = CHANGEME_DOMAIN
+myorigin = $myhostname
+mydestination = $myhostname
+
+alias_maps = hash:/etc/aliases
+alias_database = hash:/etc/aliases
+
+inet_interfaces = all
+inet_protocols = ipv4
+
+mailbox_size_limit = 51200000
+header_size_limit = 4096000
+
+recipient_delimiter = +
+biff = no
+append_dot_mydomain = no
+
+compatibility_level = 2
+disable_vrfy_command = yes
+
+
+# receiving
+smtpd_banner = $myhostname ESMTP $mail_name
+smtpd_relay_restrictions = permit_sasl_authenticated defer_unauth_destination
+
+smtpd_tls_security_level = encrypt
+smtpd_tls_cert_file = /certs/cert.pem
+smtpd_tls_key_file = /certs/privkey.pem
+
+smtpd_sasl_auth_enable = yes
+smtpd_tls_auth_only = yes
+smtpd_sasl_type = dovecot
+smtpd_sasl_path = private/auth
+smtpd_sasl_security_options = noanonymous
+smtpd_sasl_tls_security_options = noanonymous
+smtpd_sasl_local_domain = $myhostname
+
+
+# sending
+smtp_tls_security_level = encrypt
+smtp_tls_CApath = /etc/ssl/certs
+smtp_tls_session_cache_database = btree:${data_directory}/smtp_cache
+
+smtp_sasl_auth_enable = yes
+smtp_sasl_password_maps = hash:/etc/postfix/sasl_passwd
+smtp_sasl_security_options = noanonymous
+smtp_sasl_tls_security_options = noanonymous
+
+relayhost = [smtp.sendgrid.net]:587

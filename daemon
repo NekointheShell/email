@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+
+rsyslogd
+postfix start
+dovecot
+tail -f /var/log/mail.log
