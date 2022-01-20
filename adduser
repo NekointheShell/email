@@ -9,7 +9,7 @@ passwordhash = crypt.crypt(password)
 shadowline = "{}:{}:::::::\n".format(username, passwordhash)
 
 # write files
-if !os.path.isdir('users'): os.mkdir('users')
+if not os.path.isdir('users'): os.mkdir('users')
 
 listfile = open('users/list', 'a')
 listfile.write("{}\n".format(username))
