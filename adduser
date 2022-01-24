@@ -6,15 +6,8 @@ username = sys.argv[1]
 
 password = getpass.getpass('Password: ')
 passwordhash = crypt.crypt(password)
-shadowline = "{}:{}:::::::\n".format(username, passwordhash)
+shadow = "{}:{}:::::::\n".format(username, passwordhash)
 
-# write files
-if not os.path.isdir('users'): os.mkdir('users')
-
-listfile = open('users/list', 'a')
-listfile.write("{}\n".format(username))
-listfile.close()
-
-shadowfile = open('users/shadow', 'a')
-shadowfile.write(shadowline)
-shadowfile.close()
+file = open('users', 'a')
+file.write(shadow)
+file.close()

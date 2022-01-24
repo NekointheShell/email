@@ -24,8 +24,8 @@ smtpd_banner = $myhostname ESMTP $mail_name
 smtpd_relay_restrictions = permit_sasl_authenticated defer_unauth_destination
 
 smtpd_tls_security_level = encrypt
-smtpd_tls_cert_file = /certs/cert.pem
-smtpd_tls_key_file = /certs/privkey.pem
+smtpd_tls_cert_file = /run/secrets/cert.pem
+smtpd_tls_key_file = /run/secrets/privkey.pem
 
 smtpd_sasl_auth_enable = yes
 smtpd_tls_auth_only = yes

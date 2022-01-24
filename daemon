@@ -1,7 +1,51 @@
 #!/usr/bin/env bash
 
 
-rsyslogd
-postfix start
-dovecot
-tail -f /var/log/mail.log
+help () {
+    echo "This docker image requires the following secrets:"
+    echo "domain: The FQDN to send and receive email from."
+    echo "sendgrid: Your Sendgrid API key."
+    echo "users: A file containing a username, a tab character, and a shadow entry on each line."
+    echo "cert.pem: A TLS certificate for your FQDN"
+    echo "key.pem: A private key for the previously mentioned cert.pem"
+    exit 1
+}
+
+
+shouldhelp() {
+    if [ ! -f /run/secrets/domain ]; then help; fi
+    if [ ! -f /run/secrets/sendgrid ]; then help; fi
+    if [ ! -f /run/secrets/users ]; then help; fi
+    if [ ! -f /run/secrets/cert.pem ]; then help; fi
+    if [ ! -f /run/secrets/key.pem ]; then help; fi
+}
+
+
+setup () {
+    domain=$(cat /run/secrets/domain)
+    sendgrid=$(cat /run/secrets/sendgrid)
+
+    sed -i "s/CHANGEME_DOMAIN/$domain/" /etc/postfix/main.cf
+    sed -i "s/CHANGEME_DOMAIN/$domain/" /etc/postfix/master.cf
+
+    sed -i "s/CHANGEME_SENDGRID/$sendgrid/" /etc/postfix/sasl_passwd
+    postmap /etc/postfix/sasl_passwd
+
+    for user in $(cut -d : -f 1 /run/secrets/users); do useradd -m $user; done
+    while read shadow; do echo $shadow >> /etc/shadow; done < /run/secrets/users
+
+    echo "nameserver 8.8.8.8" > /var/spool/postfix/etc/resolv.conf
+}
+
+
+run () {
+    rsyslogd
+    postfix start
+    dovecot
+    tail -f /var/log/mail.log
+}
+
+
+shouldhelp
+setup
+run
