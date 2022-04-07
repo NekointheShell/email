@@ -8,7 +8,7 @@ alias_database = hash:/etc/aliases
 inet_interfaces = all
 inet_protocols = ipv4
 
-mailbox_size_limit = 51200000
+mailbox_size_limit = 1073741824
 header_size_limit = 4096000
 
 recipient_delimiter = +
